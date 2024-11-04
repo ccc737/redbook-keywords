@@ -1,0 +1,10 @@
+openpyxl
+selenium
+requests
+rich
+lxml
+pillow
+
+
+
+-i https://pypi.tuna.tsinghua.edu.cn/simple
