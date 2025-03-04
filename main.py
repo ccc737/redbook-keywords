@@ -322,9 +322,13 @@ def get_content(tree,file):
             data["comment_count"] = 0
 
     # 获取一级评论---还需要新增：在页面内滑动的代码
-    first_floor_comment_element = tree.xpath('//div[@class="note-text"]/div/div[2]/div[2]/span/span')
+        # first_floor_comment_element = tree.xpath('//span[@class="note-text"]/span/text()')
+    first_floor_comment_element = tree.xpath('//div[@class="content"]/span[@class="note-text"]/span/text()')
     if first_floor_comment_element:
+        print("first_floor_comment_element:", first_floor_comment_element)
         data["first_floor_comment"] = first_floor_comment_element[0]
+    else:
+        print("none of first_floor_comment")
 
     # 获取二级评论---还需要新增：点击「展开」，在评论span内滑动，分支判断是否需要多次点击「展开」/滑动页面
 
