@@ -28,7 +28,7 @@ chrome_options = Options()
 # 使用用户数据目录
 chrome_options.add_argument(f"--user-data-dir={USERPATH}")
 chrome_options.add_argument("--window-size=1280,720")
-service = Service('./chromedriver.exe')
+service = Service('/Users/737chen/Downloads/chromedriver-mac-arm64/chromedriver')
 
 driver = webdriver.Chrome(options=chrome_options, service=service)
 
