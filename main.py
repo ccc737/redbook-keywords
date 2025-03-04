@@ -28,7 +28,7 @@ logger = GetLogger(logger_name="XiaoHongShu", debug=False, log_file="XiaoHongShu
 # 设置 Chrome 选项以避免打印出过多日志
 chrome_options = Options()
 USERPATH = os.path.abspath("./userData")
-service = Service('./chromedriver.exe')
+service = Service('/Users/737chen/Downloads/chromedriver-mac-arm64/chromedriver')
 chrome_options.add_argument(f"--user-data-dir={USERPATH}")
 chrome_options.add_argument("--headless=new")  # 无头模式
 chrome_options.add_argument("--disable-gpu")
@@ -284,7 +284,9 @@ def get_content(tree,file):
     if content_element:
         data["content"] = content_element[0]
 
-    # 获取标签
+
+    '''
+     # 获取标签
     tags_elements = tree.xpath('//a[@class="tag"]/text()')
     tags = [tag.strip() for tag in tags_elements]
     data["tags"] = tags
@@ -293,6 +295,9 @@ def get_content(tree,file):
     date_local_element = tree.xpath('//div[@class="bottom-container"]//span[@class="date"]/text()')
     if date_local_element:
         data["date_local"] = date_local_element[0]
+    '''
+
+
     
     # 获取点赞数
     like_count_element = tree.xpath('//div[@class="interact-container"]/div/div//span[contains(@class, "like-wrapper")]//span[contains(@class, "count")]/text()')
@@ -316,6 +321,14 @@ def get_content(tree,file):
         if data["comment_count"] == "评论":
             data["comment_count"] = 0
 
+    # 获取一级评论---还需要新增：在页面内滑动的代码
+    first_floor_comment_element = tree.xpath('//div[@class="note-text"]/div/div[2]/div[2]/span/span')
+    if first_floor_comment_element:
+        data["first_floor_comment"] = first_floor_comment_element[0]
+
+    # 获取二级评论---还需要新增：点击「展开」，在评论span内滑动，分支判断是否需要多次点击「展开」/滑动页面
+
+
     # 将数据写入 Excel
     write_to_excel(data,file)
     
@@ -328,7 +341,9 @@ def write_to_excel(data, filename="output.xlsx"):
         wb = Workbook()
         ws = wb.active
         # 写入表头
-        headers = ["用户名", "标题", "内容", "标签", "发布时间和地点", "点赞数", "收藏数", "评论数", "备注"]
+        headers = ["用户名", "标题", "内容",
+                   #"标签", "发布时间和地点",
+                   "点赞数", "收藏数", "评论数", "一级评论","二级评论"]
         ws.append(headers)
         # 设置表头样式
         for col_num, header in enumerate(headers, 1):
@@ -344,12 +359,13 @@ def write_to_excel(data, filename="output.xlsx"):
         data.get("username", ""),
         data.get("title", ""),
         data.get("content", ""),
-        ", ".join(data.get("tags", [])),
-        data.get("date_local", ""),
+        # ", ".join(data.get("tags", [])),
+        # data.get("date_local", ""),
         data.get("like_count", ""),
         data.get("collect_count", ""),
         data.get("comment_count", ""),
-        data.get("remark", "")
+        data.get("first_floor_comment", "")
+
     ])
     
     # 保存文件
@@ -359,7 +375,7 @@ def write_to_excel(data, filename="output.xlsx"):
 if __name__ == '__main__':
     
     # 定义需要爬取的关键词
-    keywords = "运动"
-    total = 229 # 设置爬取的最大条数(如果设置的条数大于能爬到的最大条数则以能爬取的最大条数为准,一般小红书的最新页面展示的是229个)
+    keywords = "wps替代"
+    total = 229 # 设置爬取的最大条数(小红书的最新页面展示的是229个)
     # 爬取关键词
     search_page(keywords,total)
