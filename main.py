@@ -322,11 +322,11 @@ def get_content(tree,file):
             data["comment_count"] = 0
 
     # 获取一级评论---还需要新增：在页面内滑动的代码
-        # first_floor_comment_element = tree.xpath('//span[@class="note-text"]/span/text()')
+    # first_floor_comment_element = tree.xpath('//span[@class="note-text"]/span/text()')
     first_floor_comment_element = tree.xpath('//div[@class="content"]/span[@class="note-text"]/span/text()')
     if first_floor_comment_element:
         print("first_floor_comment_element:", first_floor_comment_element)
-        data["first_floor_comment"] = first_floor_comment_element[0]
+        data["first_floor_comment"] = "\r\n".join(first_floor_comment_element)
     else:
         print("none of first_floor_comment")
 
@@ -347,7 +347,7 @@ def write_to_excel(data, filename="output.xlsx"):
         # 写入表头
         headers = ["用户名", "标题", "内容",
                    #"标签", "发布时间和地点",
-                   "点赞数", "收藏数", "评论数", "一级评论","二级评论"]
+                   "点赞数", "收藏数", "评论数", "一级&二级评论"]
         ws.append(headers)
         # 设置表头样式
         for col_num, header in enumerate(headers, 1):
